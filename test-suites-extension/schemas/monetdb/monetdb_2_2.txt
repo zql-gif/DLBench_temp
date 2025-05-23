@@ -1,0 +1,3 @@
+DROP TABLE IF EXISTS t;
+CREATE TABLE t(c VARCHAR, vc VARCHAR, b BLOB, vb BLOB);
+WITH recursive qn as (select 1 as n, cast('x' as char(100)) as un union all select 1+n, un || 'x' from qn where n<10) select * from qn; -- CONCAT

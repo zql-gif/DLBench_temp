@@ -1,0 +1,3 @@
+select repeat('a',2000); -- REPEAT
+SELECT length("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") as len; -- LENGTH
+select length(repeat('a',2000)); -- LENGTH, REPEAT

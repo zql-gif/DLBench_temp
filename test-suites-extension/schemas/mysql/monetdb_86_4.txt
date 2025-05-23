@@ -1,0 +1,2 @@
+select NULL=NULL,NULL<>NULL,IFNULL(NULL,1.1)+0,IFNULL(NULL,1) | 0; -- IFNULL
+select field(NULL,"a","b","c"); -- FIELD

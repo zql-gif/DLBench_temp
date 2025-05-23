@@ -1,0 +1,4 @@
+DROP TABLE IF EXISTS t1;
+CREATE TABLE t1 (a DATE) ENGINE=MergeTree ORDER BY a;
+INSERT INTO t1 VALUES('2006-01-01'),('2006-01-02'),('2006-01-03'),('2006-01-04'),('2006-01-05'),('2006-01-06'),('2006-01-07');
+SELECT a, formatDateTime(toDateTime(a), '%a') as abday, CASE toDayOfWeek(toDate(a)) WHEN 1 THEN 'Monday' WHEN 2 THEN 'Tuesday' WHEN 3 THEN 'Wednesday' WHEN 4 THEN 'Thursday' WHEN 5 THEN 'Friday' WHEN 6 THEN 'Saturday' WHEN 7 THEN 'Sunday' END as day FROM t1 ORDER BY a;

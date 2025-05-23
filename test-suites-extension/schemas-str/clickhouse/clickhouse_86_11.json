@@ -1,0 +1,4 @@
+[
+    "Table: `t1`\nColumns:\n(a, Decimal(1, 0), )\n(b, Decimal(1, 0), )\n",
+    "Table: `t2`\nColumns:\n(ifNull(a, NULL), Decimal(1, 0), )\n"
+]

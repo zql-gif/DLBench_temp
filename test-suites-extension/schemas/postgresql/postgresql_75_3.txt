@@ -1,0 +1,4 @@
+DROP TABLE IF EXISTS t1;
+CREATE TABLE t1 (tx TEXT NULL, pk SERIAL PRIMARY KEY);
+INSERT INTO t1 VALUES('valid-string', 1), (decode('11', 'hex'), 2);
+SELECT pk, OCTET_LENGTH(tx), octet_length(tx) FROM t1;

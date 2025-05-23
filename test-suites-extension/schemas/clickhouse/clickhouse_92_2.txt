@@ -1,0 +1,3 @@
+DROP TABLE IF EXISTS test_log;
+CREATE TABLE test_log (argument String) ENGINE=MergeTree ORDER BY argument;
+SELECT argument FROM test_log WHERE argument LIKE concat('%azun', 'dris%');
