@@ -1,0 +1,782 @@
+[
+    {
+        "sql_id": "monetdb_1_33",
+        "database_name": "monetdb_1_33",
+        "source_dialect": "postgresql",
+        "target_dialect": "monetdb",
+        "source_query": "INSERT INTO clstr_tst (a, b, c, d) VALUES (32, 6, 'seis', repeat('xyzzy', 10000)); -- REPEAT",
+        "target_query": "INSERT INTO clstr_tst (a, b, c, d) VALUES (32, 6, 'seis', REPEAT('xyzzy', 10000));",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "REPEAT"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "REPEAT(str, count)",
+                "description": "Returns 'str' repeated 'count' times. Returns NULL if any argument is NULL.",
+                "examples": [
+                    "SELECT REPEAT('x', 5);",
+                    "SELECT REPEAT('ab', 3);",
+                    "SELECT REPEAT('*', 0);",
+                    "SELECT REPEAT(name, 2) FROM users;"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "REPEAT(str, count)",
+                "description": "Returns the string 'str' repeated 'count' times. Behavior on NULL matches MySQL.",
+                "examples": [
+                    "SELECT REPEAT('x', 5);",
+                    "SELECT REPEAT('ab', 3);",
+                    "SELECT REPEAT('*', 0);",
+                    "SELECT REPEAT(name, 2) FROM users;"
+                ]
+            }
+        ],
+        "source_related_schemas": [
+            "CREATE TABLE clstr_tst (a SERIAL PRIMARY KEY,b INT,c TEXT,d TEXT);"
+        ],
+        "target_related_schemas": [
+            "CREATE TABLE clstr_tst (a INT PRIMARY KEY,b INT,c TEXT,d TEXT);"
+        ]
+    },
+    {
+        "sql_id": "monetdb_10_2",
+        "database_name": "monetdb_10_2",
+        "source_dialect": "postgresql",
+        "target_dialect": "monetdb",
+        "source_query": "INSERT INTO tidrangescan SELECT i,repeat('x', 100) FROM generate_series(1,200) AS s(i); -- REPEAT, GENERATE_SERIES",
+        "target_query": "INSERT INTO tidrangescan SELECT i,repeat('x', 100) FROM generate_series(1,200 + 1) AS s(i);",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "REPEAT",
+            "GENERATE_SERIES"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "REPEAT(str, count)",
+                "description": "Returns 'str' repeated 'count' times. Returns NULL if any argument is NULL.",
+                "examples": [
+                    "SELECT REPEAT('x', 5);",
+                    "SELECT REPEAT('ab', 3);",
+                    "SELECT REPEAT('*', 0);",
+                    "SELECT REPEAT(name, 2) FROM users;"
+                ]
+            },
+            {
+                "expression": "generate_series(start, stop [, step])",
+                "description": "Generates a series of integers or timestamps between start and stop with an optional step.",
+                "examples": [
+                    "SELECT generate_series(1, 5);",
+                    "SELECT generate_series(3, 9, 2);",
+                    "SELECT generate_series(10, 6, -2);"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "REPEAT(str, count)",
+                "description": "Returns the string 'str' repeated 'count' times. Behavior on NULL matches MySQL.",
+                "examples": [
+                    "SELECT REPEAT('x', 5);",
+                    "SELECT REPEAT('ab', 3);",
+                    "SELECT REPEAT('*', 0);",
+                    "SELECT REPEAT(name, 2) FROM users;"
+                ]
+            },
+            {
+                "expression": "generate_series(start, stop [+/-] 1 [, step])",
+                "description": "MonetDB's generate_series excludes the stop value by default. To emulate PostgreSQL behavior (which includes the stop value), add 1 to stop when step > 0, or subtract 1 from stop when step < 0.",
+                "examples": [
+                    "SELECT * FROM generate_series(1, 5 + 1);           -- Generates 1 to 5",
+                    "SELECT * FROM generate_series(3, 9 + 2, 2);        -- Generates 3, 5, 7, 9",
+                    "SELECT * FROM generate_series(10, 6 - 2, -2);      -- Generates 10, 8, 6"
+                ]
+            }
+        ],
+        "source_related_schemas": [
+            "CREATE TABLE tidrangescan(id integer, data text);"
+        ],
+        "target_related_schemas": [
+            "CREATE TABLE tidrangescan(id integer, data text);"
+        ]
+    },
+    {
+        "sql_id": "monetdb_12_0",
+        "database_name": "monetdb_12_0",
+        "source_dialect": "postgresql",
+        "target_dialect": "monetdb",
+        "source_query": "SELECT generate_series(1, 3); -- GENERATE_SERIES",
+        "target_query": "SELECT * FROM generate_series(1, 3 + 1);",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "GENERATE_SERIES"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "generate_series(start, stop [, step])",
+                "description": "Generates a series of integers or timestamps between start and stop with an optional step.",
+                "examples": [
+                    "SELECT generate_series(1, 5);",
+                    "SELECT generate_series(3, 9, 2);",
+                    "SELECT generate_series(10, 6, -2);"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "generate_series(start, stop [+/-] 1 [, step])",
+                "description": "MonetDB's generate_series excludes the stop value by default. To emulate PostgreSQL behavior (which includes the stop value), add 1 to stop when step > 0, or subtract 1 from stop when step < 0.",
+                "examples": [
+                    "SELECT * FROM generate_series(1, 5 + 1);           -- Generates 1 to 5",
+                    "SELECT * FROM generate_series(3, 9 + 2, 2);        -- Generates 3, 5, 7, 9",
+                    "SELECT * FROM generate_series(10, 6 - 2, -2);      -- Generates 10, 8, 6"
+                ]
+            }
+        ],
+        "source_related_schemas": [],
+        "target_related_schemas": []
+    },
+    {
+        "sql_id": "monetdb_12_1",
+        "database_name": "monetdb_12_1",
+        "source_dialect": "postgresql",
+        "target_dialect": "monetdb",
+        "source_query": "SELECT generate_series(1, 3) AS val1, generate_series(3,5) AS val2; -- GENERATE_SERIES",
+        "target_query": "SELECT * FROM generate_series(1, 3 + 1) AS t1(val1), generate_series(3, 5 + 1) AS t2(val2);",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "GENERATE_SERIES"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "generate_series(start, stop [, step])",
+                "description": "Generates a series of integers or timestamps between start and stop with an optional step.",
+                "examples": [
+                    "SELECT generate_series(1, 5);",
+                    "SELECT generate_series(3, 9, 2);",
+                    "SELECT generate_series(10, 6, -2);"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "generate_series(start, stop [+/-] 1 [, step])",
+                "description": "MonetDB's generate_series excludes the stop value by default. To emulate PostgreSQL behavior (which includes the stop value), add 1 to stop when step > 0, or subtract 1 from stop when step < 0.",
+                "examples": [
+                    "SELECT * FROM generate_series(1, 5 + 1);           -- Generates 1 to 5",
+                    "SELECT * FROM generate_series(3, 9 + 2, 2);        -- Generates 3, 5, 7, 9",
+                    "SELECT * FROM generate_series(10, 6 - 2, -2);      -- Generates 10, 8, 6"
+                ]
+            }
+        ],
+        "source_related_schemas": [],
+        "target_related_schemas": []
+    },
+    {
+        "sql_id": "monetdb_12_2",
+        "database_name": "monetdb_12_2",
+        "source_dialect": "postgresql",
+        "target_dialect": "monetdb",
+        "source_query": "SELECT generate_series(1, 2) AS val1, generate_series(1,4) AS val2; -- GENERATE_SERIES",
+        "target_query": "SELECT * FROM generate_series(1, 2 + 1) AS t1(val1), generate_series(1, 4 + 1) AS t2(val2);",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "GENERATE_SERIES"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "generate_series(start, stop [, step])",
+                "description": "Generates a series of integers or timestamps between start and stop with an optional step.",
+                "examples": [
+                    "SELECT generate_series(1, 5);",
+                    "SELECT generate_series(3, 9, 2);",
+                    "SELECT generate_series(10, 6, -2);"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "generate_series(start, stop [+/-] 1 [, step])",
+                "description": "MonetDB's generate_series excludes the stop value by default. To emulate PostgreSQL behavior (which includes the stop value), add 1 to stop when step > 0, or subtract 1 from stop when step < 0.",
+                "examples": [
+                    "SELECT * FROM generate_series(1, 5 + 1);           -- Generates 1 to 5",
+                    "SELECT * FROM generate_series(3, 9 + 2, 2);        -- Generates 3, 5, 7, 9",
+                    "SELECT * FROM generate_series(10, 6 - 2, -2);      -- Generates 10, 8, 6"
+                ]
+            }
+        ],
+        "source_related_schemas": [],
+        "target_related_schemas": []
+    },
+    {
+        "sql_id": "monetdb_2_2",
+        "database_name": "monetdb_2_2",
+        "source_dialect": "postgresql",
+        "target_dialect": "monetdb",
+        "source_query": "INSERT INTO cmdata VALUES(repeat('1234567890', 1000)); -- REPEAT",
+        "target_query": "INSERT INTO cmdata VALUES(repeat('1234567890', 1000));",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "REPEAT"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "REPEAT(str, count)",
+                "description": "Returns 'str' repeated 'count' times. Returns NULL if any argument is NULL.",
+                "examples": [
+                    "SELECT REPEAT('x', 5);",
+                    "SELECT REPEAT('ab', 3);",
+                    "SELECT REPEAT('*', 0);",
+                    "SELECT REPEAT(name, 2) FROM users;"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "REPEAT(str, count)",
+                "description": "Returns the string 'str' repeated 'count' times. Behavior on NULL matches MySQL.",
+                "examples": [
+                    "SELECT REPEAT('x', 5);",
+                    "SELECT REPEAT('ab', 3);",
+                    "SELECT REPEAT('*', 0);",
+                    "SELECT REPEAT(name, 2) FROM users;"
+                ]
+            }
+        ],
+        "source_related_schemas": [
+            "CREATE TABLE cmdata(f1 text);"
+        ],
+        "target_related_schemas": [
+            "CREATE TABLE cmdata(f1 text);"
+        ]
+    },
+    {
+        "sql_id": "monetdb_2_6",
+        "database_name": "monetdb_2_6",
+        "source_dialect": "postgresql",
+        "target_dialect": "monetdb",
+        "source_query": "INSERT INTO cmdata1 VALUES(repeat('1234567890', 1004)); -- REPEAT",
+        "target_query": "INSERT INTO cmdata1 VALUES(repeat('1234567890', 1004));",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "REPEAT"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "REPEAT(str, count)",
+                "description": "Returns 'str' repeated 'count' times. Returns NULL if any argument is NULL.",
+                "examples": [
+                    "SELECT REPEAT('x', 5);",
+                    "SELECT REPEAT('ab', 3);",
+                    "SELECT REPEAT('*', 0);",
+                    "SELECT REPEAT(name, 2) FROM users;"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "REPEAT(str, count)",
+                "description": "Returns the string 'str' repeated 'count' times. Behavior on NULL matches MySQL.",
+                "examples": [
+                    "SELECT REPEAT('x', 5);",
+                    "SELECT REPEAT('ab', 3);",
+                    "SELECT REPEAT('*', 0);",
+                    "SELECT REPEAT(name, 2) FROM users;"
+                ]
+            }
+        ],
+        "source_related_schemas": [
+            "CREATE TABLE cmdata1(f1 TEXT);"
+        ],
+        "target_related_schemas": [
+            "CREATE TABLE cmdata1(f1 TEXT);"
+        ]
+    },
+    {
+        "sql_id": "monetdb_3_3",
+        "database_name": "monetdb_3_3",
+        "source_dialect": "postgresql",
+        "target_dialect": "monetdb",
+        "source_query": "INSERT INTO delete_test (id, a, b) VALUES (2, 50, repeat('x', 10000)); -- REPEAT",
+        "target_query": "INSERT INTO delete_test (id, a, b) VALUES (2, 50, repeat('x', 10000));",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "REPEAT"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "REPEAT(str, count)",
+                "description": "Returns 'str' repeated 'count' times. Returns NULL if any argument is NULL.",
+                "examples": [
+                    "SELECT REPEAT('x', 5);",
+                    "SELECT REPEAT('ab', 3);",
+                    "SELECT REPEAT('*', 0);",
+                    "SELECT REPEAT(name, 2) FROM users;"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "REPEAT(str, count)",
+                "description": "Returns the string 'str' repeated 'count' times. Behavior on NULL matches MySQL.",
+                "examples": [
+                    "SELECT REPEAT('x', 5);",
+                    "SELECT REPEAT('ab', 3);",
+                    "SELECT REPEAT('*', 0);",
+                    "SELECT REPEAT(name, 2) FROM users;"
+                ]
+            }
+        ],
+        "source_related_schemas": [
+            "CREATE TABLE delete_test (id SERIAL PRIMARY KEY,a INT,b text);"
+        ],
+        "target_related_schemas": [
+            "CREATE TABLE delete_test (id INT PRIMARY KEY, a INT, b text);"
+        ]
+    },
+    {
+        "sql_id": "monetdb_4_0",
+        "database_name": "monetdb_4_0",
+        "source_dialect": "postgresql",
+        "target_dialect": "monetdb",
+        "source_query": "SELECT current_timestamp = NOW(); -- NOW",
+        "target_query": "SELECT current_timestamp = CURRENT_TIMESTAMP;",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "NOW"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "CURRENT_TIMESTAMP",
+                "description": "In PostgreSQL, CURRENT_TIMESTAMP is used to retrieve the current date and time, equivalent to NOW() in MySQL and MariaDB.",
+                "examples": [
+                    "SELECT CURRENT_TIMESTAMP;",
+                    "CREATE TABLE t12 SELECT * FROM t1 WHERE b = 67 AND (c IS NULL OR c > CURRENT_TIMESTAMP) ORDER BY 3 DESC;",
+                    "INSERT INTO t1 VALUES (CURRENT_TIMESTAMP);"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "CURRENT_TIMESTAMP",
+                "description": "MonetDB uses CURRENT_TIMESTAMP to return the current date and time, similar to PostgreSQL's approach.",
+                "examples": [
+                    "SELECT CURRENT_TIMESTAMP;",
+                    "CREATE TABLE t12 SELECT * FROM t1 WHERE b = 67 AND (c IS NULL OR c > CURRENT_TIMESTAMP) ORDER BY 3 DESC;",
+                    "INSERT INTO t1 VALUES (CURRENT_TIMESTAMP);"
+                ]
+            }
+        ],
+        "source_related_schemas": [],
+        "target_related_schemas": []
+    },
+    {
+        "sql_id": "monetdb_5_0",
+        "database_name": "monetdb_5_0",
+        "source_dialect": "postgresql",
+        "target_dialect": "monetdb",
+        "source_query": "select current_schemas(false); -- CURRENT_SCHEMAS",
+        "target_query": "SELECT current_schema;",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "CURRENT_SCHEMAS"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "current_schemas(include_implicit boolean)",
+                "description": "Returns a text array of schema names in the current search path. The boolean parameter controls whether implicit schemas such as pg_catalog are included.",
+                "examples": [
+                    "SELECT current_schemas(false);",
+                    "SELECT current_schemas(true);",
+                    "SELECT unnest(current_schemas(false));"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "current_schema",
+                "description": "Returns the name of the current database for the session, used as equivalent to schema name in PostgreSQL.",
+                "examples": [
+                    "SELECT current_schema;"
+                ]
+            }
+        ],
+        "source_related_schemas": [],
+        "target_related_schemas": []
+    },
+    {
+        "sql_id": "monetdb_6_2",
+        "database_name": "monetdb_6_2",
+        "source_dialect": "postgresql",
+        "target_dialect": "monetdb",
+        "source_query": "create table simple1 as select generate_series(1, 200) AS id; -- GENERATE_SERIES",
+        "target_query": "CREATE TABLE simple1 AS SELECT * FROM generate_series(1, 200 + 1) AS id;",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "GENERATE_SERIES"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "generate_series(start, stop [, step])",
+                "description": "Generates a series of integers or timestamps between start and stop with an optional step.",
+                "examples": [
+                    "SELECT generate_series(1, 5);",
+                    "SELECT generate_series(3, 9, 2);",
+                    "SELECT generate_series(10, 6, -2);"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "generate_series(start, stop [+/-] 1 [, step])",
+                "description": "MonetDB's generate_series excludes the stop value by default. To emulate PostgreSQL behavior (which includes the stop value), add 1 to stop when step > 0, or subtract 1 from stop when step < 0.",
+                "examples": [
+                    "SELECT * FROM generate_series(1, 5 + 1);           -- Generates 1 to 5",
+                    "SELECT * FROM generate_series(3, 9 + 2, 2);        -- Generates 3, 5, 7, 9",
+                    "SELECT * FROM generate_series(10, 6 - 2, -2);      -- Generates 10, 8, 6"
+                ]
+            }
+        ],
+        "source_related_schemas": [
+            "create table simple1 as select generate_series(1, 200) AS id; -- GENERATE_SERIES"
+        ],
+        "target_related_schemas": [
+            "CREATE TABLE simple1 AS SELECT * FROM generate_series(1, 200 + 1) AS id;"
+        ]
+    },
+    {
+        "sql_id": "monetdb_6_5",
+        "database_name": "monetdb_6_5",
+        "source_dialect": "postgresql",
+        "target_dialect": "monetdb",
+        "source_query": "create table bigger_than_it_looks as select generate_series(1, 200) as id; -- GENERATE_SERIES",
+        "target_query": "CREATE TABLE bigger_than_it_looks AS SELECT * FROM generate_series(1, 200 + 1) AS id;",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "GENERATE_SERIES"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "generate_series(start, stop [, step])",
+                "description": "Generates a series of integers or timestamps between start and stop with an optional step.",
+                "examples": [
+                    "SELECT generate_series(1, 5);",
+                    "SELECT generate_series(3, 9, 2);",
+                    "SELECT generate_series(10, 6, -2);"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "generate_series(start, stop [+/-] 1 [, step])",
+                "description": "MonetDB's generate_series excludes the stop value by default. To emulate PostgreSQL behavior (which includes the stop value), add 1 to stop when step > 0, or subtract 1 from stop when step < 0.",
+                "examples": [
+                    "SELECT * FROM generate_series(1, 5 + 1);           -- Generates 1 to 5",
+                    "SELECT * FROM generate_series(3, 9 + 2, 2);        -- Generates 3, 5, 7, 9",
+                    "SELECT * FROM generate_series(10, 6 - 2, -2);      -- Generates 10, 8, 6"
+                ]
+            }
+        ],
+        "source_related_schemas": [
+            "create table bigger_than_it_looks as select generate_series(1, 200) as id; -- GENERATE_SERIES"
+        ],
+        "target_related_schemas": [
+            "CREATE TABLE bigger_than_it_looks AS SELECT * FROM generate_series(1, 200 + 1) AS id;"
+        ]
+    },
+    {
+        "sql_id": "monetdb_6_10",
+        "database_name": "monetdb_6_10",
+        "source_dialect": "postgresql",
+        "target_dialect": "monetdb",
+        "source_query": "insert into extremely_skewed select 42 as id, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'from generate_series(1, 200); -- GENERATE_SERIES",
+        "target_query": "INSERT INTO extremely_skewed SELECT 42 AS id, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' FROM generate_series(1, 200 + 1);",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "GENERATE_SERIES"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "generate_series(start, stop [, step])",
+                "description": "Generates a series of integers or timestamps between start and stop with an optional step.",
+                "examples": [
+                    "SELECT generate_series(1, 5);",
+                    "SELECT generate_series(3, 9, 2);",
+                    "SELECT generate_series(10, 6, -2);"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "generate_series(start, stop [+/-] 1 [, step])",
+                "description": "MonetDB's generate_series excludes the stop value by default. To emulate PostgreSQL behavior (which includes the stop value), add 1 to stop when step > 0, or subtract 1 from stop when step < 0.",
+                "examples": [
+                    "SELECT * FROM generate_series(1, 5 + 1);           -- Generates 1 to 5",
+                    "SELECT * FROM generate_series(3, 9 + 2, 2);        -- Generates 3, 5, 7, 9",
+                    "SELECT * FROM generate_series(10, 6 - 2, -2);      -- Generates 10, 8, 6"
+                ]
+            }
+        ],
+        "source_related_schemas": [
+            "create table extremely_skewed (id int, t text);"
+        ],
+        "target_related_schemas": [
+            "CREATE TABLE extremely_skewed (id INT, t TEXT);"
+        ]
+    },
+    {
+        "sql_id": "monetdb_7_2",
+        "database_name": "monetdb_7_2",
+        "source_dialect": "postgresql",
+        "target_dialect": "monetdb",
+        "source_query": "INSERT INTO pagg_tab SELECT i % 20, i % 30, to_char(i % 12, 'FM0000'), i % 30 FROM generate_series(0, 2999) i; -- TO_CHAR, GENERATE_SERIES",
+        "target_query": "INSERT INTO pagg_tab SELECT i % 20, i % 30, lpad(CAST(i % 12 AS STRING), 4, '0'), i % 30 FROM generate_series(0, 2999 + 1) AS g(i);",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "TO_CHAR",
+            "GENERATE_SERIES"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "to_char(numeric, 'FM0000')",
+                "description": "Formats a number as a zero-padded 4-digit string without leading spaces.",
+                "examples": [
+                    "SELECT to_char(5, 'FM0000');   -- 0005",
+                    "SELECT to_char(123, 'FM0000'); -- 0123",
+                    "SELECT to_char(0, 'FM0000');   -- 0000"
+                ]
+            },
+            {
+                "expression": "generate_series(start, stop [, step])",
+                "description": "Generates a series of integers or timestamps between start and stop with an optional step.",
+                "examples": [
+                    "SELECT generate_series(1, 5);",
+                    "SELECT generate_series(3, 9, 2);",
+                    "SELECT generate_series(10, 6, -2);"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "lpad(CAST(value AS string), 4, '0')",
+                "description": "Pads numeric value with zeros using lpad.",
+                "examples": [
+                    "SELECT lpad(CAST(5 AS string), 4, '0');",
+                    "SELECT lpad(CAST(123 AS string), 4, '0');",
+                    "SELECT lpad(CAST(0 AS string), 4, '0');"
+                ]
+            },
+            {
+                "expression": "generate_series(start, stop [+/-] 1 [, step])",
+                "description": "MonetDB's generate_series excludes the stop value by default. To emulate PostgreSQL behavior (which includes the stop value), add 1 to stop when step > 0, or subtract 1 from stop when step < 0.",
+                "examples": [
+                    "SELECT * FROM generate_series(1, 5 + 1);           -- Generates 1 to 5",
+                    "SELECT * FROM generate_series(3, 9 + 2, 2);        -- Generates 3, 5, 7, 9",
+                    "SELECT * FROM generate_series(10, 6 - 2, -2);      -- Generates 10, 8, 6"
+                ]
+            }
+        ],
+        "source_related_schemas": [
+            "CREATE TABLE pagg_tab (a int, b int, c text, d int);"
+        ],
+        "target_related_schemas": [
+            "CREATE TABLE pagg_tab (a int, b int, c text, d int);"
+        ]
+    },
+    {
+        "sql_id": "monetdb_7_7",
+        "database_name": "monetdb_7_7",
+        "source_dialect": "postgresql",
+        "target_dialect": "monetdb",
+        "source_query": "INSERT INTO pagg_tab_ml SELECT i % 30, i % 10, to_char(i % 4, 'FM0000') FROM generate_series(0, 29999) i; -- TO_CHAR",
+        "target_query": "INSERT INTO pagg_tab_ml SELECT i % 30, i % 10, lpad(CAST(i % 4 AS string), 4, '0') FROM generate_series(0, 29999 + 1) AS g(i);",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "TO_CHAR"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "to_char(numeric, 'FM0000')",
+                "description": "Formats a number as a zero-padded 4-digit string without leading spaces.",
+                "examples": [
+                    "SELECT to_char(5, 'FM0000');   -- 0005",
+                    "SELECT to_char(123, 'FM0000'); -- 0123",
+                    "SELECT to_char(0, 'FM0000');   -- 0000"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "lpad(CAST(value AS string), 4, '0')",
+                "description": "Pads numeric value with zeros using lpad.",
+                "examples": [
+                    "SELECT lpad(CAST(5 AS string), 4, '0');",
+                    "SELECT lpad(CAST(123 AS string), 4, '0');",
+                    "SELECT lpad(CAST(0 AS string), 4, '0');"
+                ]
+            }
+        ],
+        "source_related_schemas": [
+            "CREATE TABLE pagg_tab_ml (a int, b int, c text);"
+        ],
+        "target_related_schemas": [
+            "CREATE TABLE pagg_tab_ml (a int, b int, c text);"
+        ]
+    },
+    {
+        "sql_id": "monetdb_8_2",
+        "database_name": "monetdb_8_2",
+        "source_dialect": "postgresql",
+        "target_dialect": "monetdb",
+        "source_query": "INSERT INTO prt1 SELECT i, i % 25, to_char(i, 'FM0000') FROM generate_series(0, 599) i WHERE i % 2 = 0; -- TO_CHAR, GENERATE_SERIES",
+        "target_query": "INSERT INTO prt1 SELECT i, i % 25, lpad(CAST(i AS string), 4, '0') FROM generate_series(0, 599 + 1) AS g(i) WHERE i % 2 = 0;",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "TO_CHAR",
+            "GENERATE_SERIES"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "to_char(numeric, 'FM0000')",
+                "description": "Formats a number as a zero-padded 4-digit string without leading spaces.",
+                "examples": [
+                    "SELECT to_char(5, 'FM0000');   -- 0005",
+                    "SELECT to_char(123, 'FM0000'); -- 0123",
+                    "SELECT to_char(0, 'FM0000');   -- 0000"
+                ]
+            },
+            {
+                "expression": "generate_series(start, stop [, step])",
+                "description": "Generates a series of integers or timestamps between start and stop with an optional step.",
+                "examples": [
+                    "SELECT generate_series(1, 5);",
+                    "SELECT generate_series(3, 9, 2);",
+                    "SELECT generate_series(10, 6, -2);"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "lpad(CAST(value AS string), 4, '0')",
+                "description": "Pads numeric value with zeros using lpad.",
+                "examples": [
+                    "SELECT lpad(CAST(5 AS string), 4, '0');",
+                    "SELECT lpad(CAST(123 AS string), 4, '0');",
+                    "SELECT lpad(CAST(0 AS string), 4, '0');"
+                ]
+            },
+            {
+                "expression": "generate_series(start, stop [+/-] 1 [, step])",
+                "description": "MonetDB's generate_series excludes the stop value by default. To emulate PostgreSQL behavior (which includes the stop value), add 1 to stop when step > 0, or subtract 1 from stop when step < 0.",
+                "examples": [
+                    "SELECT * FROM generate_series(1, 5 + 1);           -- Generates 1 to 5",
+                    "SELECT * FROM generate_series(3, 9 + 2, 2);        -- Generates 3, 5, 7, 9",
+                    "SELECT * FROM generate_series(10, 6 - 2, -2);      -- Generates 10, 8, 6"
+                ]
+            }
+        ],
+        "source_related_schemas": [
+            "CREATE TABLE prt1 (a int, b int, c varchar);"
+        ],
+        "target_related_schemas": [
+            "CREATE TABLE prt1 (a int, b int, c varchar);"
+        ]
+    },
+    {
+        "sql_id": "monetdb_8_7",
+        "database_name": "monetdb_8_7",
+        "source_dialect": "postgresql",
+        "target_dialect": "monetdb",
+        "source_query": "INSERT INTO prt2 SELECT i % 25, i, to_char(i, 'FM0000') FROM generate_series(0, 599) i WHERE i % 3 = 0; -- TO_CHAR, GENERATE_SERIES",
+        "target_query": "INSERT INTO prt2 SELECT i % 25, i, lpad(CAST(i AS string), 4, '0') FROM generate_series(0, 599 + 1) AS g(i) WHERE i % 3 = 0;",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "TO_CHAR",
+            "GENERATE_SERIES"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "to_char(numeric, 'FM0000')",
+                "description": "Formats a number as a zero-padded 4-digit string without leading spaces.",
+                "examples": [
+                    "SELECT to_char(5, 'FM0000');   -- 0005",
+                    "SELECT to_char(123, 'FM0000'); -- 0123",
+                    "SELECT to_char(0, 'FM0000');   -- 0000"
+                ]
+            },
+            {
+                "expression": "generate_series(start, stop [, step])",
+                "description": "Generates a series of integers or timestamps between start and stop with an optional step.",
+                "examples": [
+                    "SELECT generate_series(1, 5);",
+                    "SELECT generate_series(3, 9, 2);",
+                    "SELECT generate_series(10, 6, -2);"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "lpad(CAST(value AS string), 4, '0')",
+                "description": "Pads numeric value with zeros using lpad.",
+                "examples": [
+                    "SELECT lpad(CAST(5 AS string), 4, '0');",
+                    "SELECT lpad(CAST(123 AS string), 4, '0');",
+                    "SELECT lpad(CAST(0 AS string), 4, '0');"
+                ]
+            },
+            {
+                "expression": "generate_series(start, stop [+/-] 1 [, step])",
+                "description": "MonetDB's generate_series excludes the stop value by default. To emulate PostgreSQL behavior (which includes the stop value), add 1 to stop when step > 0, or subtract 1 from stop when step < 0.",
+                "examples": [
+                    "SELECT * FROM generate_series(1, 5 + 1);           -- Generates 1 to 5",
+                    "SELECT * FROM generate_series(3, 9 + 2, 2);        -- Generates 3, 5, 7, 9",
+                    "SELECT * FROM generate_series(10, 6 - 2, -2);      -- Generates 10, 8, 6"
+                ]
+            }
+        ],
+        "source_related_schemas": [
+            "CREATE TABLE prt2 (a int, b int, c varchar);"
+        ],
+        "target_related_schemas": [
+            "CREATE TABLE prt2 (a int, b int, c varchar);"
+        ]
+    },
+    {
+        "sql_id": "monetdb_9_2",
+        "database_name": "monetdb_9_2",
+        "source_dialect": "postgresql",
+        "target_dialect": "monetdb",
+        "source_query": "SELECT nextval('seq3'); -- NEXTVAL",
+        "target_query": "SELECT NEXT VALUE FOR seq3;",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "NEXTVAL"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "nextval('sequence_name')",
+                "description": "Returns the next value from a named sequence and increments the counter atomically.",
+                "examples": [
+                    "SELECT nextval('my_seq');",
+                    "SELECT nextval('my_seq') + 5;",
+                    "SELECT nextval('my_seq') * 2;"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "NEXT VALUE FOR sequence_name",
+                "description": "Returns the next value from a named sequence using standard SQL syntax.",
+                "examples": [
+                    "SELECT NEXT VALUE FOR my_seq;",
+                    "SELECT NEXT VALUE FOR my_seq + 5;",
+                    "SELECT NEXT VALUE FOR my_seq * 2;"
+                ]
+            }
+        ],
+        "source_related_schemas": [],
+        "target_related_schemas": []
+    }
+]

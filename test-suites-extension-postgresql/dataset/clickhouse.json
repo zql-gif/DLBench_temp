@@ -1,0 +1,1033 @@
+[
+    {
+        "sql_id": "clickhouse_1_33",
+        "database_name": "clickhouse_1_33",
+        "source_dialect": "postgresql",
+        "target_dialect": "clickhouse",
+        "source_query": "INSERT INTO clstr_tst (a, b, c, d) VALUES (32, 6, 'seis', repeat('xyzzy', 10000)); -- REPEAT",
+        "target_query": "INSERT INTO clstr_tst (a, b, c, d) VALUES (32, 6, 'seis', repeat('xyzzy', 10000));",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "REPEAT"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "REPEAT(str, count)",
+                "description": "Returns 'str' repeated 'count' times. Returns NULL if any argument is NULL.",
+                "examples": [
+                    "SELECT REPEAT('x', 5);",
+                    "SELECT REPEAT('ab', 3);",
+                    "SELECT REPEAT('*', 0);",
+                    "SELECT REPEAT(name, 2) FROM users;"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "repeat(str, count)",
+                "description": "Repeats the string 'count' times. NULLs are treated as empty strings unless handled explicitly with assumeNotNull().",
+                "examples": [
+                    "SELECT repeat('x', 5);",
+                    "SELECT repeat('ab', 3);",
+                    "SELECT repeat('*', 0);",
+                    "SELECT repeat(assumeNotNull(name), 2) FROM users;"
+                ]
+            }
+        ],
+        "source_related_schemas": [
+            "CREATE TABLE clstr_tst (a SERIAL PRIMARY KEY,b INT,c TEXT,d TEXT);"
+        ],
+        "target_related_schemas": [
+            "CREATE TABLE clstr_tst (a UInt32, b Int32, c String, d String) ENGINE = MergeTree() ORDER BY a;"
+        ]
+    },
+    {
+        "sql_id": "clickhouse_10_2",
+        "database_name": "clickhouse_10_2",
+        "source_dialect": "postgresql",
+        "target_dialect": "clickhouse",
+        "source_query": "INSERT INTO tidrangescan SELECT i,repeat('x', 100) FROM generate_series(1,200) AS s(i); -- REPEAT, GENERATE_SERIES",
+        "target_query": "INSERT INTO tidrangescan SELECT number + 1 AS id, repeat('x', 100) AS data FROM numbers(200);",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "REPEAT",
+            "GENERATE_SERIES"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "REPEAT(str, count)",
+                "description": "Returns 'str' repeated 'count' times. Returns NULL if any argument is NULL.",
+                "examples": [
+                    "SELECT REPEAT('x', 5);",
+                    "SELECT REPEAT('ab', 3);",
+                    "SELECT REPEAT('*', 0);",
+                    "SELECT REPEAT(name, 2) FROM users;"
+                ]
+            },
+            {
+                "expression": "generate_series(start, stop [, step])",
+                "description": "Generates a series of integers or timestamps between start and stop with an optional step.",
+                "examples": [
+                    "SELECT generate_series(1, 5);",
+                    "SELECT generate_series(3, 9, 2);",
+                    "SELECT generate_series(10, 6, -2);"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "repeat(str, count)",
+                "description": "Repeats the string 'count' times. NULLs are treated as empty strings unless handled explicitly with assumeNotNull().",
+                "examples": [
+                    "SELECT repeat('x', 5);",
+                    "SELECT repeat('ab', 3);",
+                    "SELECT repeat('*', 0);",
+                    "SELECT repeat(assumeNotNull(name), 2) FROM users;"
+                ]
+            },
+            {
+                "expression": "SELECT ... FROM numbers(n)",
+                "description": "Uses the numbers() function to generate integer sequences; transformations can simulate steps.",
+                "examples": [
+                    "SELECT number + 1 AS n FROM numbers(5);",
+                    "SELECT number * 2 + 3 AS n FROM numbers(4);",
+                    "SELECT 10 - number * 2 AS n FROM numbers(3);"
+                ]
+            }
+        ],
+        "source_related_schemas": [
+            "CREATE TABLE tidrangescan(id integer, data text);"
+        ],
+        "target_related_schemas": [
+            "CREATE TABLE tidrangescan (id Int32, data String) ENGINE=MergeTree ORDER BY id;"
+        ]
+    },
+    {
+        "sql_id": "clickhouse_11_11",
+        "database_name": "clickhouse_11_11",
+        "source_dialect": "postgresql",
+        "target_dialect": "clickhouse",
+        "source_query": "SELECT pg_sleep(0.1); -- PG_SLEEP",
+        "target_query": "SELECT sleep(0.1);",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "PG_SLEEP"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "pg_sleep(seconds)",
+                "description": "Delays execution for the specified number of seconds.",
+                "examples": [
+                    "SELECT pg_sleep(1);",
+                    "SELECT pg_sleep(0.5);",
+                    "SELECT pg_sleep(2);"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "sleep(seconds)",
+                "description": "Sleeps for the given number of seconds. Useful for testing and debugging.",
+                "examples": [
+                    "SELECT sleep(1);",
+                    "SELECT sleep(0.5);",
+                    "SELECT sleep(2);"
+                ]
+            }
+        ],
+        "source_related_schemas": [],
+        "target_related_schemas": []
+    },
+    {
+        "sql_id": "clickhouse_11_14",
+        "database_name": "clickhouse_11_14",
+        "source_dialect": "postgresql",
+        "target_dialect": "clickhouse",
+        "source_query": "SELECT pg_sleep(0.1); -- PG_SLEEP",
+        "target_query": "SELECT sleep(0.1);",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "PG_SLEEP"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "pg_sleep(seconds)",
+                "description": "Delays execution for the specified number of seconds.",
+                "examples": [
+                    "SELECT pg_sleep(1);",
+                    "SELECT pg_sleep(0.5);",
+                    "SELECT pg_sleep(2);"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "sleep(seconds)",
+                "description": "Sleeps for the given number of seconds. Useful for testing and debugging.",
+                "examples": [
+                    "SELECT sleep(1);",
+                    "SELECT sleep(0.5);",
+                    "SELECT sleep(2);"
+                ]
+            }
+        ],
+        "source_related_schemas": [],
+        "target_related_schemas": []
+    },
+    {
+        "sql_id": "clickhouse_11_16",
+        "database_name": "clickhouse_11_16",
+        "source_dialect": "postgresql",
+        "target_dialect": "clickhouse",
+        "source_query": "SELECT pg_sleep(0.1); -- PG_SLEEP",
+        "target_query": "SELECT sleep(0.1);",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "PG_SLEEP"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "pg_sleep(seconds)",
+                "description": "Delays execution for the specified number of seconds.",
+                "examples": [
+                    "SELECT pg_sleep(1);",
+                    "SELECT pg_sleep(0.5);",
+                    "SELECT pg_sleep(2);"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "sleep(seconds)",
+                "description": "Sleeps for the given number of seconds. Useful for testing and debugging.",
+                "examples": [
+                    "SELECT sleep(1);",
+                    "SELECT sleep(0.5);",
+                    "SELECT sleep(2);"
+                ]
+            }
+        ],
+        "source_related_schemas": [],
+        "target_related_schemas": []
+    },
+    {
+        "sql_id": "clickhouse_12_0",
+        "database_name": "clickhouse_12_0",
+        "source_dialect": "postgresql",
+        "target_dialect": "clickhouse",
+        "source_query": "SELECT generate_series(1, 3); -- GENERATE_SERIES",
+        "target_query": "SELECT number + 1 AS n FROM numbers(3);",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "GENERATE_SERIES"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "generate_series(start, stop [, step])",
+                "description": "Generates a series of integers or timestamps between start and stop with an optional step.",
+                "examples": [
+                    "SELECT generate_series(1, 5);",
+                    "SELECT generate_series(3, 9, 2);",
+                    "SELECT generate_series(10, 6, -2);"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "SELECT ... FROM numbers(n)",
+                "description": "Uses the numbers() function to generate integer sequences; transformations can simulate steps.",
+                "examples": [
+                    "SELECT number + 1 AS n FROM numbers(5);",
+                    "SELECT number * 2 + 3 AS n FROM numbers(4);",
+                    "SELECT 10 - number * 2 AS n FROM numbers(3);"
+                ]
+            }
+        ],
+        "source_related_schemas": [],
+        "target_related_schemas": []
+    },
+    {
+        "sql_id": "clickhouse_12_1",
+        "database_name": "clickhouse_12_1",
+        "source_dialect": "postgresql",
+        "target_dialect": "clickhouse",
+        "source_query": "SELECT generate_series(1, 3) AS val1, generate_series(3,5) AS val2; -- GENERATE_SERIES",
+        "target_query": "SELECT a.number + 1 AS val1, b.number + 3 AS val2 FROM numbers(3) AS a, numbers(3) AS b;",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "GENERATE_SERIES"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "generate_series(start, stop [, step])",
+                "description": "Generates a series of integers or timestamps between start and stop with an optional step.",
+                "examples": [
+                    "SELECT generate_series(1, 5);",
+                    "SELECT generate_series(3, 9, 2);",
+                    "SELECT generate_series(10, 6, -2);"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "SELECT ... FROM numbers(n)",
+                "description": "Uses the numbers() function to generate integer sequences; transformations can simulate steps.",
+                "examples": [
+                    "SELECT number + 1 AS n FROM numbers(5);",
+                    "SELECT number * 2 + 3 AS n FROM numbers(4);",
+                    "SELECT 10 - number * 2 AS n FROM numbers(3);"
+                ]
+            }
+        ],
+        "source_related_schemas": [],
+        "target_related_schemas": []
+    },
+    {
+        "sql_id": "clickhouse_12_2",
+        "database_name": "clickhouse_12_2",
+        "source_dialect": "postgresql",
+        "target_dialect": "clickhouse",
+        "source_query": "SELECT generate_series(1, 2) AS val1, generate_series(1,4) AS val2; -- GENERATE_SERIES",
+        "target_query": "SELECT a.number + 1 AS val1, b.number + 1 AS val2 FROM numbers(2) AS a, numbers(4) AS b;",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "GENERATE_SERIES"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "generate_series(start, stop [, step])",
+                "description": "Generates a series of integers or timestamps between start and stop with an optional step.",
+                "examples": [
+                    "SELECT generate_series(1, 5);",
+                    "SELECT generate_series(3, 9, 2);",
+                    "SELECT generate_series(10, 6, -2);"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "SELECT ... FROM numbers(n)",
+                "description": "Uses the numbers() function to generate integer sequences; transformations can simulate steps.",
+                "examples": [
+                    "SELECT number + 1 AS n FROM numbers(5);",
+                    "SELECT number * 2 + 3 AS n FROM numbers(4);",
+                    "SELECT 10 - number * 2 AS n FROM numbers(3);"
+                ]
+            }
+        ],
+        "source_related_schemas": [],
+        "target_related_schemas": []
+    },
+    {
+        "sql_id": "clickhouse_2_2",
+        "database_name": "clickhouse_2_2",
+        "source_dialect": "postgresql",
+        "target_dialect": "clickhouse",
+        "source_query": "INSERT INTO cmdata VALUES(repeat('1234567890', 1000)); -- REPEAT",
+        "target_query": "INSERT INTO cmdata VALUES(repeat('1234567890', 1000));",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "REPEAT"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "REPEAT(str, count)",
+                "description": "Returns 'str' repeated 'count' times. Returns NULL if any argument is NULL.",
+                "examples": [
+                    "SELECT REPEAT('x', 5);",
+                    "SELECT REPEAT('ab', 3);",
+                    "SELECT REPEAT('*', 0);",
+                    "SELECT REPEAT(name, 2) FROM users;"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "repeat(str, count)",
+                "description": "Repeats the string 'count' times. NULLs are treated as empty strings unless handled explicitly with assumeNotNull().",
+                "examples": [
+                    "SELECT repeat('x', 5);",
+                    "SELECT repeat('ab', 3);",
+                    "SELECT repeat('*', 0);",
+                    "SELECT repeat(assumeNotNull(name), 2) FROM users;"
+                ]
+            }
+        ],
+        "source_related_schemas": [
+            "CREATE TABLE cmdata(f1 text);"
+        ],
+        "target_related_schemas": [
+            "CREATE TABLE cmdata(f1 text) ENGINE=MergeTree ORDER BY f1;"
+        ]
+    },
+    {
+        "sql_id": "clickhouse_2_6",
+        "database_name": "clickhouse_2_6",
+        "source_dialect": "postgresql",
+        "target_dialect": "clickhouse",
+        "source_query": "INSERT INTO cmdata1 VALUES(repeat('1234567890', 1004)); -- REPEAT",
+        "target_query": "INSERT INTO cmdata1 VALUES(repeat('1234567890', 1004));",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "REPEAT"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "REPEAT(str, count)",
+                "description": "Returns 'str' repeated 'count' times. Returns NULL if any argument is NULL.",
+                "examples": [
+                    "SELECT REPEAT('x', 5);",
+                    "SELECT REPEAT('ab', 3);",
+                    "SELECT REPEAT('*', 0);",
+                    "SELECT REPEAT(name, 2) FROM users;"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "repeat(str, count)",
+                "description": "Repeats the string 'count' times. NULLs are treated as empty strings unless handled explicitly with assumeNotNull().",
+                "examples": [
+                    "SELECT repeat('x', 5);",
+                    "SELECT repeat('ab', 3);",
+                    "SELECT repeat('*', 0);",
+                    "SELECT repeat(assumeNotNull(name), 2) FROM users;"
+                ]
+            }
+        ],
+        "source_related_schemas": [
+            "CREATE TABLE cmdata1(f1 TEXT);"
+        ],
+        "target_related_schemas": [
+            "CREATE TABLE cmdata1(f1 TEXT) ENGINE=MergeTree ORDER BY f1;"
+        ]
+    },
+    {
+        "sql_id": "clickhouse_3_3",
+        "database_name": "clickhouse_3_3",
+        "source_dialect": "postgresql",
+        "target_dialect": "clickhouse",
+        "source_query": "INSERT INTO delete_test (id, a, b) VALUES (2, 50, repeat('x', 10000)); -- REPEAT",
+        "target_query": "INSERT INTO delete_test (id, a, b) VALUES (2, 50, repeat('x', 10000));",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "REPEAT"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "REPEAT(str, count)",
+                "description": "Returns 'str' repeated 'count' times. Returns NULL if any argument is NULL.",
+                "examples": [
+                    "SELECT REPEAT('x', 5);",
+                    "SELECT REPEAT('ab', 3);",
+                    "SELECT REPEAT('*', 0);",
+                    "SELECT REPEAT(name, 2) FROM users;"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "repeat(str, count)",
+                "description": "Repeats the string 'count' times. NULLs are treated as empty strings unless handled explicitly with assumeNotNull().",
+                "examples": [
+                    "SELECT repeat('x', 5);",
+                    "SELECT repeat('ab', 3);",
+                    "SELECT repeat('*', 0);",
+                    "SELECT repeat(assumeNotNull(name), 2) FROM users;"
+                ]
+            }
+        ],
+        "source_related_schemas": [
+            "CREATE TABLE delete_test (id SERIAL PRIMARY KEY,a INT,b text);"
+        ],
+        "target_related_schemas": [
+            "CREATE TABLE delete_test (id Int32 PRIMARY KEY, a Int32, b String) ENGINE=MergeTree() ORDER BY id;"
+        ]
+    },
+    {
+        "sql_id": "clickhouse_4_0",
+        "database_name": "clickhouse_4_0",
+        "source_dialect": "postgresql",
+        "target_dialect": "clickhouse",
+        "source_query": "SELECT current_timestamp = NOW(); -- NOW",
+        "target_query": "SELECT now() = now();",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "NOW"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "CURRENT_TIMESTAMP",
+                "description": "In PostgreSQL, CURRENT_TIMESTAMP is used to retrieve the current date and time, equivalent to NOW() in MySQL and MariaDB.",
+                "examples": [
+                    "SELECT CURRENT_TIMESTAMP;",
+                    "CREATE TABLE t12 SELECT * FROM t1 WHERE b = 67 AND (c IS NULL OR c > CURRENT_TIMESTAMP) ORDER BY 3 DESC;",
+                    "INSERT INTO t1 VALUES (CURRENT_TIMESTAMP);"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "now()",
+                "description": "ClickHouse uses the now() function to return the current date and time, which is equivalent to MySQL's NOW() function.",
+                "examples": [
+                    "SELECT now();",
+                    "CREATE TABLE t12 AS SELECT * FROM t1 WHERE b = 67 AND (c IS NULL OR c > now()) ORDER BY 3 DESC;",
+                    "INSERT INTO t1 VALUES (now());"
+                ]
+            }
+        ],
+        "source_related_schemas": [],
+        "target_related_schemas": []
+    },
+    {
+        "sql_id": "clickhouse_5_0",
+        "database_name": "clickhouse_5_0",
+        "source_dialect": "postgresql",
+        "target_dialect": "clickhouse",
+        "source_query": "select current_schemas(false); -- CURRENT_SCHEMAS",
+        "target_query": "SELECT currentDatabase();",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "CURRENT_SCHEMAS"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "current_schemas(include_implicit boolean)",
+                "description": "Returns a text array of schema names in the current search path. The boolean parameter controls whether implicit schemas such as pg_catalog are included.",
+                "examples": [
+                    "SELECT current_schemas(false);",
+                    "SELECT current_schemas(true);",
+                    "SELECT unnest(current_schemas(false));"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "currentDatabase()",
+                "description": "Returns the name of the current database for the session, equivalent to PostgreSQL schema name.",
+                "examples": [
+                    "SELECT currentDatabase();"
+                ]
+            }
+        ],
+        "source_related_schemas": [],
+        "target_related_schemas": []
+    },
+    {
+        "sql_id": "clickhouse_6_2",
+        "database_name": "clickhouse_6_2",
+        "source_dialect": "postgresql",
+        "target_dialect": "clickhouse",
+        "source_query": "create table simple1 as select generate_series(1, 200) AS id; -- GENERATE_SERIES",
+        "target_query": "CREATE TABLE simple1 ENGINE=MergeTree ORDER BY id AS SELECT number + 1 AS id FROM numbers(200);",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "GENERATE_SERIES"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "generate_series(start, stop [, step])",
+                "description": "Generates a series of integers or timestamps between start and stop with an optional step.",
+                "examples": [
+                    "SELECT generate_series(1, 5);",
+                    "SELECT generate_series(3, 9, 2);",
+                    "SELECT generate_series(10, 6, -2);"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "SELECT ... FROM numbers(n)",
+                "description": "Uses the numbers() function to generate integer sequences; transformations can simulate steps.",
+                "examples": [
+                    "SELECT number + 1 AS n FROM numbers(5);",
+                    "SELECT number * 2 + 3 AS n FROM numbers(4);",
+                    "SELECT 10 - number * 2 AS n FROM numbers(3);"
+                ]
+            }
+        ],
+        "source_related_schemas": [
+            "create table simple1 as select generate_series(1, 200) AS id; -- GENERATE_SERIES"
+        ],
+        "target_related_schemas": [
+            "CREATE TABLE simple1 ENGINE=MergeTree ORDER BY id AS SELECT number + 1 AS id FROM numbers(200);"
+        ]
+    },
+    {
+        "sql_id": "clickhouse_6_5",
+        "database_name": "clickhouse_6_5",
+        "source_dialect": "postgresql",
+        "target_dialect": "clickhouse",
+        "source_query": "create table bigger_than_it_looks as select generate_series(1, 200) as id; -- GENERATE_SERIES",
+        "target_query": "CREATE TABLE bigger_than_it_looks ENGINE=MergeTree ORDER BY id AS SELECT number + 1 AS id FROM numbers(200);",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "GENERATE_SERIES"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "generate_series(start, stop [, step])",
+                "description": "Generates a series of integers or timestamps between start and stop with an optional step.",
+                "examples": [
+                    "SELECT generate_series(1, 5);",
+                    "SELECT generate_series(3, 9, 2);",
+                    "SELECT generate_series(10, 6, -2);"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "SELECT ... FROM numbers(n)",
+                "description": "Uses the numbers() function to generate integer sequences; transformations can simulate steps.",
+                "examples": [
+                    "SELECT number + 1 AS n FROM numbers(5);",
+                    "SELECT number * 2 + 3 AS n FROM numbers(4);",
+                    "SELECT 10 - number * 2 AS n FROM numbers(3);"
+                ]
+            }
+        ],
+        "source_related_schemas": [
+            "create table bigger_than_it_looks as select generate_series(1, 200) as id; -- GENERATE_SERIES"
+        ],
+        "target_related_schemas": [
+            "CREATE TABLE bigger_than_it_looks ENGINE=MergeTree ORDER BY id AS SELECT number + 1 AS id FROM numbers(200);"
+        ]
+    },
+    {
+        "sql_id": "clickhouse_6_10",
+        "database_name": "clickhouse_6_10",
+        "source_dialect": "postgresql",
+        "target_dialect": "clickhouse",
+        "source_query": "insert into extremely_skewed select 42 as id, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'from generate_series(1, 200); -- GENERATE_SERIES",
+        "target_query": "INSERT INTO extremely_skewed SELECT 42 AS id, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' FROM numbers(200);",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "GENERATE_SERIES"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "generate_series(start, stop [, step])",
+                "description": "Generates a series of integers or timestamps between start and stop with an optional step.",
+                "examples": [
+                    "SELECT generate_series(1, 5);",
+                    "SELECT generate_series(3, 9, 2);",
+                    "SELECT generate_series(10, 6, -2);"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "SELECT ... FROM numbers(n)",
+                "description": "Uses the numbers() function to generate integer sequences; transformations can simulate steps.",
+                "examples": [
+                    "SELECT number + 1 AS n FROM numbers(5);",
+                    "SELECT number * 2 + 3 AS n FROM numbers(4);",
+                    "SELECT 10 - number * 2 AS n FROM numbers(3);"
+                ]
+            }
+        ],
+        "source_related_schemas": [
+            "create table extremely_skewed (id int, t text);"
+        ],
+        "target_related_schemas": [
+            "CREATE TABLE extremely_skewed (id Int32, t String) ENGINE=MergeTree ORDER BY id;"
+        ]
+    },
+    {
+        "sql_id": "clickhouse_6_12",
+        "database_name": "clickhouse_6_12",
+        "source_dialect": "postgresql",
+        "target_dialect": "clickhouse",
+        "source_query": "create table wide as select generate_series(1, 2) as id, rpad('', 320000, 'x') as t; -- GENERATE_SERIES, RPAD",
+        "target_query": "CREATE TABLE wide ENGINE=MergeTree ORDER BY id AS SELECT number + 1 AS id, RPAD('', 320000, 'x') AS t FROM numbers(2);",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "GENERATE_SERIES",
+            "RPAD"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "generate_series(start, stop [, step])",
+                "description": "Generates a series of integers or timestamps between start and stop with an optional step.",
+                "examples": [
+                    "SELECT generate_series(1, 5);",
+                    "SELECT generate_series(3, 9, 2);",
+                    "SELECT generate_series(10, 6, -2);"
+                ]
+            },
+            {
+                "expression": "RPAD(expression, length, pad_string)",
+                "description": "PostgreSQL doesn't have a native RPAD, but can simulate it.",
+                "examples": [
+                    "SELECT RPAD('hello', 10, ' ');",
+                    "SELECT RPAD('abc', 6, 'x');",
+                    "SELECT RPAD(123::text, 5, '0');"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "SELECT ... FROM numbers(n)",
+                "description": "Uses the numbers() function to generate integer sequences; transformations can simulate steps.",
+                "examples": [
+                    "SELECT number + 1 AS n FROM numbers(5);",
+                    "SELECT number * 2 + 3 AS n FROM numbers(4);",
+                    "SELECT 10 - number * 2 AS n FROM numbers(3);"
+                ]
+            },
+            {
+                "expression": "RPAD(expression, length, pad_string)",
+                "description": "ClickHouse uses the RPAD function for padding.",
+                "examples": [
+                    "SELECT RPAD('hello', 10, ' ');",
+                    "SELECT RPAD('abc', 6, 'x');",
+                    "SELECT RPAD(toString(123), 5, '0');"
+                ]
+            }
+        ],
+        "source_related_schemas": [
+            "create table wide as select generate_series(1, 2) as id, rpad('', 320000, 'x') as t; -- GENERATE_SERIES, RPAD"
+        ],
+        "target_related_schemas": [
+            "CREATE TABLE wide ENGINE=MergeTree ORDER BY id AS SELECT number + 1 AS id, RPAD('', 320000, 'x') AS t FROM numbers(2);"
+        ]
+    },
+    {
+        "sql_id": "clickhouse_6_14",
+        "database_name": "clickhouse_6_14",
+        "source_dialect": "postgresql",
+        "target_dialect": "clickhouse",
+        "source_query": "create table join_foo as select generate_series(1, 3) as id, 'xxxxx'::text as t; -- GENERATE_SERIES",
+        "target_query": "CREATE TABLE join_foo ENGINE=MergeTree ORDER BY id AS SELECT number + 1 AS id, 'xxxxx' AS t FROM numbers(3);",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "GENERATE_SERIES"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "generate_series(start, stop [, step])",
+                "description": "Generates a series of integers or timestamps between start and stop with an optional step.",
+                "examples": [
+                    "SELECT generate_series(1, 5);",
+                    "SELECT generate_series(3, 9, 2);",
+                    "SELECT generate_series(10, 6, -2);"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "SELECT ... FROM numbers(n)",
+                "description": "Uses the numbers() function to generate integer sequences; transformations can simulate steps.",
+                "examples": [
+                    "SELECT number + 1 AS n FROM numbers(5);",
+                    "SELECT number * 2 + 3 AS n FROM numbers(4);",
+                    "SELECT 10 - number * 2 AS n FROM numbers(3);"
+                ]
+            }
+        ],
+        "source_related_schemas": [
+            "create table join_foo as select generate_series(1, 3) as id, 'xxxxx'::text as t; -- GENERATE_SERIES"
+        ],
+        "target_related_schemas": [
+            "CREATE TABLE join_foo ENGINE=MergeTree ORDER BY id AS SELECT number + 1 AS id, 'xxxxx' AS t FROM numbers(3);"
+        ]
+    },
+    {
+        "sql_id": "clickhouse_6_16",
+        "database_name": "clickhouse_6_16",
+        "source_dialect": "postgresql",
+        "target_dialect": "clickhouse",
+        "source_query": "create table join_bar as select generate_series(1, 10000) as id, 'xxxxx'::text as t; -- GENERATE_SERIES",
+        "target_query": "CREATE TABLE join_bar ENGINE=MergeTree ORDER BY id AS SELECT number + 1 AS id, 'xxxxx' AS t FROM numbers(10000);",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "GENERATE_SERIES"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "generate_series(start, stop [, step])",
+                "description": "Generates a series of integers or timestamps between start and stop with an optional step.",
+                "examples": [
+                    "SELECT generate_series(1, 5);",
+                    "SELECT generate_series(3, 9, 2);",
+                    "SELECT generate_series(10, 6, -2);"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "SELECT ... FROM numbers(n)",
+                "description": "Uses the numbers() function to generate integer sequences; transformations can simulate steps.",
+                "examples": [
+                    "SELECT number + 1 AS n FROM numbers(5);",
+                    "SELECT number * 2 + 3 AS n FROM numbers(4);",
+                    "SELECT 10 - number * 2 AS n FROM numbers(3);"
+                ]
+            }
+        ],
+        "source_related_schemas": [
+            "create table join_bar as select generate_series(1, 10000) as id, 'xxxxx'::text as t; -- GENERATE_SERIES"
+        ],
+        "target_related_schemas": [
+            "CREATE TABLE join_bar ENGINE=MergeTree ORDER BY id AS SELECT number + 1 AS id, 'xxxxx' AS t FROM numbers(10000);"
+        ]
+    },
+    {
+        "sql_id": "clickhouse_7_2",
+        "database_name": "clickhouse_7_2",
+        "source_dialect": "postgresql",
+        "target_dialect": "clickhouse",
+        "source_query": "INSERT INTO pagg_tab SELECT i % 20, i % 30, to_char(i % 12, 'FM0000'), i % 30 FROM generate_series(0, 2999) i; -- TO_CHAR, GENERATE_SERIES",
+        "target_query": "INSERT INTO pagg_tab SELECT number % 20 AS a, number % 30 AS b, LPAD(toString(number % 12), 4, '0') AS c, number % 30 AS d FROM numbers(3000);",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "TO_CHAR",
+            "GENERATE_SERIES"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "to_char(numeric, 'FM0000')",
+                "description": "Formats a number as a zero-padded 4-digit string without leading spaces.",
+                "examples": [
+                    "SELECT to_char(5, 'FM0000');   -- 0005",
+                    "SELECT to_char(123, 'FM0000'); -- 0123",
+                    "SELECT to_char(0, 'FM0000');   -- 0000"
+                ]
+            },
+            {
+                "expression": "generate_series(start, stop [, step])",
+                "description": "Generates a series of integers or timestamps between start and stop with an optional step.",
+                "examples": [
+                    "SELECT generate_series(1, 5);",
+                    "SELECT generate_series(3, 9, 2);",
+                    "SELECT generate_series(10, 6, -2);"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "LPAD(toString(value), 4, '0')",
+                "description": "Converts number to string and pads with zeros to the left.",
+                "examples": [
+                    "SELECT LPAD(toString(5), 4, '0');",
+                    "SELECT LPAD(toString(123), 4, '0');",
+                    "SELECT LPAD(toString(0), 4, '0');"
+                ]
+            },
+            {
+                "expression": "SELECT ... FROM numbers(n)",
+                "description": "Uses the numbers() function to generate integer sequences; transformations can simulate steps.",
+                "examples": [
+                    "SELECT number + 1 AS n FROM numbers(5);",
+                    "SELECT number * 2 + 3 AS n FROM numbers(4);",
+                    "SELECT 10 - number * 2 AS n FROM numbers(3);"
+                ]
+            }
+        ],
+        "source_related_schemas": [
+            "CREATE TABLE pagg_tab (a int, b int, c text, d int);"
+        ],
+        "target_related_schemas": [
+            "CREATE TABLE pagg_tab (a Int32, b Int32, c String, d Int32) ENGINE=MergeTree ORDER BY a;"
+        ]
+    },
+    {
+        "sql_id": "clickhouse_7_7",
+        "database_name": "clickhouse_7_7",
+        "source_dialect": "postgresql",
+        "target_dialect": "clickhouse",
+        "source_query": "INSERT INTO pagg_tab_ml SELECT i % 30, i % 10, to_char(i % 4, 'FM0000') FROM generate_series(0, 29999) i; -- TO_CHAR",
+        "target_query": "INSERT INTO pagg_tab_ml SELECT number % 30 AS a, number % 10 AS b, LPAD(toString(number % 4), 4, '0') AS c FROM numbers(30000);",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "TO_CHAR"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "to_char(numeric, 'FM0000')",
+                "description": "Formats a number as a zero-padded 4-digit string without leading spaces.",
+                "examples": [
+                    "SELECT to_char(5, 'FM0000');   -- 0005",
+                    "SELECT to_char(123, 'FM0000'); -- 0123",
+                    "SELECT to_char(0, 'FM0000');   -- 0000"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "LPAD(toString(value), 4, '0')",
+                "description": "Converts number to string and pads with zeros to the left.",
+                "examples": [
+                    "SELECT LPAD(toString(5), 4, '0');",
+                    "SELECT LPAD(toString(123), 4, '0');",
+                    "SELECT LPAD(toString(0), 4, '0');"
+                ]
+            }
+        ],
+        "source_related_schemas": [
+            "CREATE TABLE pagg_tab_ml (a int, b int, c text);"
+        ],
+        "target_related_schemas": [
+            "CREATE TABLE pagg_tab_ml (a Int32, b Int32, c String) ENGINE=MergeTree ORDER BY a;"
+        ]
+    },
+    {
+        "sql_id": "clickhouse_7_9",
+        "database_name": "clickhouse_7_9",
+        "source_dialect": "postgresql",
+        "target_dialect": "clickhouse",
+        "source_query": "SELECT a, sum(b), array_agg(distinct c), count(*) FROM pagg_tab_ml GROUP BY a HAVING avg(b) < 3 ORDER BY 1, 2, 3; -- ARRAY_AGG",
+        "target_query": "SELECT a, sum(b) AS sum_b, groupUniqArray(c) AS unique_c, count() AS count_all FROM pagg_tab_ml GROUP BY a HAVING avg(b) < 3 ORDER BY a, sum_b, unique_c;",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "ARRAY_AGG"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "ARRAY_AGG(expression [DISTINCT])",
+                "description": "Aggregate function that returns an array of all input values, optionally removing duplicates if DISTINCT is specified.",
+                "examples": [
+                    "SELECT ARRAY_AGG(DISTINCT x) FROM (VALUES (1), (2), (1), (3)) AS t(x);",
+                    "SELECT id, ARRAY_AGG(value) FROM my_table GROUP BY id;",
+                    "SELECT ARRAY_AGG(DISTINCT LOWER(name)) FROM users;"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "groupUniqArray(expression)",
+                "description": "Aggregate function that returns an array of unique input values per group. Effectively equivalent to ARRAY_AGG(DISTINCT ...) in PostgreSQL.",
+                "examples": [
+                    "SELECT groupUniqArray(x) FROM (SELECT 1 AS x UNION ALL SELECT 2 UNION ALL SELECT 1 UNION ALL SELECT 3);",
+                    "SELECT id, groupArray(value) FROM my_table GROUP BY id;",
+                    "SELECT groupUniqArray(lower(name)) FROM users;"
+                ]
+            }
+        ],
+        "source_related_schemas": [
+            "CREATE TABLE pagg_tab_ml (a int, b int, c text);"
+        ],
+        "target_related_schemas": [
+            "CREATE TABLE pagg_tab_ml (a Int32, b Int32, c String) ENGINE=MergeTree ORDER BY a;"
+        ]
+    },
+    {
+        "sql_id": "clickhouse_8_2",
+        "database_name": "clickhouse_8_2",
+        "source_dialect": "postgresql",
+        "target_dialect": "clickhouse",
+        "source_query": "INSERT INTO prt1 SELECT i, i % 25, to_char(i, 'FM0000') FROM generate_series(0, 599) i WHERE i % 2 = 0; -- TO_CHAR, GENERATE_SERIES",
+        "target_query": "INSERT INTO prt1 SELECT number AS i, i % 25, LPAD(toString(i), 4, '0') FROM numbers(600) WHERE i % 2 = 0;",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "TO_CHAR",
+            "GENERATE_SERIES"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "to_char(numeric, 'FM0000')",
+                "description": "Formats a number as a zero-padded 4-digit string without leading spaces.",
+                "examples": [
+                    "SELECT to_char(5, 'FM0000');   -- 0005",
+                    "SELECT to_char(123, 'FM0000'); -- 0123",
+                    "SELECT to_char(0, 'FM0000');   -- 0000"
+                ]
+            },
+            {
+                "expression": "generate_series(start, stop [, step])",
+                "description": "Generates a series of integers or timestamps between start and stop with an optional step.",
+                "examples": [
+                    "SELECT generate_series(1, 5);",
+                    "SELECT generate_series(3, 9, 2);",
+                    "SELECT generate_series(10, 6, -2);"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "LPAD(toString(value), 4, '0')",
+                "description": "Converts number to string and pads with zeros to the left.",
+                "examples": [
+                    "SELECT LPAD(toString(5), 4, '0');",
+                    "SELECT LPAD(toString(123), 4, '0');",
+                    "SELECT LPAD(toString(0), 4, '0');"
+                ]
+            },
+            {
+                "expression": "SELECT ... FROM numbers(n)",
+                "description": "Uses the numbers() function to generate integer sequences; transformations can simulate steps.",
+                "examples": [
+                    "SELECT number + 1 AS n FROM numbers(5);",
+                    "SELECT number * 2 + 3 AS n FROM numbers(4);",
+                    "SELECT 10 - number * 2 AS n FROM numbers(3);"
+                ]
+            }
+        ],
+        "source_related_schemas": [
+            "CREATE TABLE prt1 (a int, b int, c varchar);"
+        ],
+        "target_related_schemas": [
+            "CREATE TABLE prt1 (a Int32, b Int32, c String) ENGINE=MergeTree ORDER BY a;"
+        ]
+    },
+    {
+        "sql_id": "clickhouse_8_7",
+        "database_name": "clickhouse_8_7",
+        "source_dialect": "postgresql",
+        "target_dialect": "clickhouse",
+        "source_query": "INSERT INTO prt2 SELECT i % 25, i, to_char(i, 'FM0000') FROM generate_series(0, 599) i WHERE i % 3 = 0; -- TO_CHAR, GENERATE_SERIES",
+        "target_query": "INSERT INTO prt2 SELECT i % 25, number AS i, LPAD(toString(i), 4, '0') FROM numbers(600) WHERE i % 3 = 0;",
+        "semantic_equivalent_type": "exact_equivalence",
+        "dialect_tokens": [
+            "TO_CHAR",
+            "GENERATE_SERIES"
+        ],
+        "source_dialect_knowledge": [
+            {
+                "expression": "to_char(numeric, 'FM0000')",
+                "description": "Formats a number as a zero-padded 4-digit string without leading spaces.",
+                "examples": [
+                    "SELECT to_char(5, 'FM0000');   -- 0005",
+                    "SELECT to_char(123, 'FM0000'); -- 0123",
+                    "SELECT to_char(0, 'FM0000');   -- 0000"
+                ]
+            },
+            {
+                "expression": "generate_series(start, stop [, step])",
+                "description": "Generates a series of integers or timestamps between start and stop with an optional step.",
+                "examples": [
+                    "SELECT generate_series(1, 5);",
+                    "SELECT generate_series(3, 9, 2);",
+                    "SELECT generate_series(10, 6, -2);"
+                ]
+            }
+        ],
+        "target_dialect_knowledge": [
+            {
+                "expression": "LPAD(toString(value), 4, '0')",
+                "description": "Converts number to string and pads with zeros to the left.",
+                "examples": [
+                    "SELECT LPAD(toString(5), 4, '0');",
+                    "SELECT LPAD(toString(123), 4, '0');",
+                    "SELECT LPAD(toString(0), 4, '0');"
+                ]
+            },
+            {
+                "expression": "SELECT ... FROM numbers(n)",
+                "description": "Uses the numbers() function to generate integer sequences; transformations can simulate steps.",
+                "examples": [
+                    "SELECT number + 1 AS n FROM numbers(5);",
+                    "SELECT number * 2 + 3 AS n FROM numbers(4);",
+                    "SELECT 10 - number * 2 AS n FROM numbers(3);"
+                ]
+            }
+        ],
+        "source_related_schemas": [
+            "CREATE TABLE prt2 (a int, b int, c varchar);"
+        ],
+        "target_related_schemas": [
+            "CREATE TABLE prt2 (a Int32, b Int32, c String) ENGINE=MergeTree ORDER BY a;"
+        ]
+    }
+]
